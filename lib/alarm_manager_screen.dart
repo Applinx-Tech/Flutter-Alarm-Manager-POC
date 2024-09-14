@@ -7,7 +7,10 @@ class AlarmManagerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Alarm Manager Screen")),
+      appBar: AppBar(
+        title: Text("Alarm Manager Screen"),
+        centerTitle: true,
+      ),
       body: Center(
         child: ElevatedButton(
             onPressed: () async {
