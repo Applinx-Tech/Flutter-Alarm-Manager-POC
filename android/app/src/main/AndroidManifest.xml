@@ -7,6 +7,9 @@
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
     -->
+    
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
@@ -20,7 +23,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="flutter_alarm_manager_poc" >
         <activity
-            android:name=".AlarmActivity"
+            android:name=".activity.AlarmActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
