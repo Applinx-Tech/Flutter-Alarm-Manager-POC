@@ -29,6 +29,7 @@
         android:label="flutter_alarm_manager_poc">
         <activity
             android:name=".activity.AlarmActivity"
+            android:theme="@style/Theme.AppCompat"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:exported="false" />
