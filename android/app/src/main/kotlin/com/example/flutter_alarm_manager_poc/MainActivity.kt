@@ -1,22 +1,12 @@
 package com.example.flutter_alarm_manager_poc
 
-import android.app.AlarmManager
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.util.Log
-import com.example.flutter_alarm_manager_poc.alarmNotificationService.AlarmNotificationService
-import com.example.flutter_alarm_manager_poc.alarmNotificationService.AlarmNotificationServiceImpl
 import com.example.flutter_alarm_manager_poc.alarmScheduler.AlarmScheduler
 import com.example.flutter_alarm_manager_poc.alarmScheduler.AlarmSchedulerImpl
 import com.example.flutter_alarm_manager_poc.model.AlarmItem
-import com.example.flutter_alarm_manager_poc.receiver.AlarmReceiver
-import com.example.flutter_alarm_manager_poc.utils.turnScreenOffAndKeyguardOn
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import java.util.Calendar
 
 class MainActivity : FlutterActivity() {
 
@@ -31,7 +21,6 @@ class MainActivity : FlutterActivity() {
 
         alarmScheduler = AlarmSchedulerImpl(this)
 
-        turnScreenOffAndKeyguardOn()
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
