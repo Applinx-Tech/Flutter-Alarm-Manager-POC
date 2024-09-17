@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/alarm_manager_screen.dart';
-
+import 'package:flutter_alarm_manager_poc/hive/models/alarm_action.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'utils/alarm_method_channel.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(AlarmActionAdapter()); //add TypeAdapater
+  await Hive.openBox<AlarmAction>('alarm_actions');
+
   AlarmMethodChannel.initialize();
   runApp(const MyApp());
 }

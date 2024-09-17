@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_alarm_manager_poc/hive/models/alarm_action.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class AlarmMethodChannel {
   static const name = "Flutter";
@@ -21,30 +22,20 @@ class AlarmMethodChannel {
   }
 
   static Future<dynamic> _handleMethodCall(MethodCall call) async {
+    var alarmBox = Hive.box<AlarmAction>('alarm_actions');
+
     switch (call.method) {
       case 'alarmAccepted':
         log(name: name, 'Alarm was accepted');
-        Fluttertoast.showToast(
-            msg: "Alarm was accepted",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 16.0);
+        await alarmBox.add(AlarmAction('accept', DateTime.now()));
+
         // Handle alarm accepted
         // You can call a function or update state here
         break;
       case 'alarmSnoozed':
         log(name: name, 'Alarm was snoozed');
-        Fluttertoast.showToast(
-            msg: "Alarm was snoozed",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 16.0);
+        await alarmBox.add(AlarmAction('snooze', DateTime.now()));
+
         // Handle alarm snoozed
         // You can call a function or update state here
         break;
