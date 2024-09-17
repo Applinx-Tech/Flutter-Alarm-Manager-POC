@@ -28,11 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.example.flutter_alarm_manager_poc.utils.convertMillisToDate
 import com.example.flutter_alarm_manager_poc.utils.convertMillisToTime
+import org.w3c.dom.Text
 
 @Composable
 fun AlarmScreen(
@@ -57,8 +62,8 @@ fun AlarmScreen(
                 modifier = Modifier.padding(bottom = 32.dp)
             )
             Text(
-                text = "Alarm has been ringing!!!",
-                style = MaterialTheme.typography.titleLarge,
+                text = convertMillisToDate(System.currentTimeMillis()),
+                style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
@@ -72,9 +77,21 @@ fun AlarmScreen(
                         spotColor = Color(0xFF8A2BE2) // Purple shadow color
                     ),
                 shape = CircleShape,
-                color = Color(0xFF8A2BE2)
+                color = Color(0xFF8A2BE2) // This will be the border color
             ) {
-
+                Box(
+                    modifier = Modifier.padding(4.dp), // This creates the border effect
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = "https://play-lh.googleusercontent.com/KGOmMhN6spxlHwZrtHvhQ1L0ZbokbKIHBAJTjmwF40yW9KVnCYt6AdpSQOFMVaLmj7o",
+                        contentDescription = "Profile image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
         }
@@ -83,64 +100,47 @@ fun AlarmScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(color = Color.Green, shape = CircleShape)
-                        .clickable {
-                            onAccept()
-                        }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Tick Mark",
-                        tint = Color.White, // This makes the icon white
-                        modifier = Modifier
-                            .size(40.dp)
-                            .align(Alignment.Center) // Adjust the size of the icon as needed
-                    )
-                }
-
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = "Accept",
-                    style = TextStyle(color = Color.White, fontStyle = FontStyle.Normal)
-                )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(color = Color.Red, shape = CircleShape)
-                        .clickable {
-                            onSnooze()
-                        }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Tick Mark",
-                        tint = Color.White, // This makes the icon white
-                        modifier = Modifier
-                            .size(40.dp)
-                            .align(Alignment.Center) // Adjust the size of the icon as needed
-                    )
-
-                }
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = "Snooze",
-                    style = TextStyle(color = Color.White, fontStyle = FontStyle.Normal)
-                )
-            }
+            ButtonAction(icon = Icons.Filled.Check, text = "Accept", onClick = onAccept)
+            ButtonAction(icon = Icons.Filled.Close, text = "Snooze", onClick = onSnooze)
         }
 
 
+    }
+}
+
+@Composable
+fun ButtonAction(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    text: String,
+    onClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = modifier
+                .size(60.dp)
+                .background(color = Color.White, shape = CircleShape)
+                .clickable {
+                    onClick()
+                }
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                tint =  Color(0xFF8A2BE2), // This makes the icon white
+                modifier = Modifier
+                    .size(40.dp)
+                    .align(Alignment.Center) // Adjust the size of the icon as needed
+            )
+
+        }
+        Text(
+            modifier = Modifier.padding(top = 8.dp),
+            text = text,
+            style = TextStyle(color = Color.White, fontStyle = FontStyle.Normal)
+        )
     }
 }
 
