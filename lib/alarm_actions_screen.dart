@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/hive/models/alarm_action.dart';
+import 'package:flutter_alarm_manager_poc/hive/service/database_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class AlarmActionsScreen extends StatefulWidget {
@@ -15,13 +16,13 @@ class _AlarmActionsScreenState extends State<AlarmActionsScreen> {
   @override
   void initState() {
     super.initState();
-    var alarmBox = Hive.box<AlarmAction>('alarm_actions');
-    log(alarmBox.values.toString());
 
-    if (alarmBox.values.isEmpty) {
+    var actions = DatabaseService.getAllAlarmActions();
+
+    if (actions.isEmpty) {
       log("Empty");
     } else {
-      for (var alarm in alarmBox.values) {
+      for (var alarm in actions) {
         log('Action: ${alarm.actionType}, Timestamp: ${alarm.timestamp}');
       }
     }
