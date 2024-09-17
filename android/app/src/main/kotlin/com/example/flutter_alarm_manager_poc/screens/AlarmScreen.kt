@@ -1,5 +1,11 @@
 package com.example.flutter_alarm_manager_poc.screens
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +29,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,31 +79,7 @@ fun AlarmScreen(
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
-            Surface(
-                modifier = Modifier
-                    .size(100.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = CircleShape,
-                        spotColor = Color(0xFF8A2BE2) // Purple shadow color
-                    ),
-                shape = CircleShape,
-                color = Color(0xFF8A2BE2) // This will be the border color
-            ) {
-                Box(
-                    modifier = Modifier.padding(4.dp), // This creates the border effect
-                    contentAlignment = Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = "https://play-lh.googleusercontent.com/KGOmMhN6spxlHwZrtHvhQ1L0ZbokbKIHBAJTjmwF40yW9KVnCYt6AdpSQOFMVaLmj7o",
-                        contentDescription = "Profile image",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
+            AnimatedProfileImage()
 
         }
 
@@ -129,7 +116,7 @@ fun ButtonAction(
             Icon(
                 imageVector = icon,
                 contentDescription = text,
-                tint =  Color(0xFF8A2BE2), // This makes the icon white
+                tint = Color(0xFF8A2BE2), // This makes the icon white
                 modifier = Modifier
                     .size(40.dp)
                     .align(Alignment.Center) // Adjust the size of the icon as needed
@@ -141,6 +128,49 @@ fun ButtonAction(
             text = text,
             style = TextStyle(color = Color.White, fontStyle = FontStyle.Normal)
         )
+    }
+}
+
+@Composable
+fun AnimatedProfileImage() {
+    var isAnimating by remember { mutableStateOf(false) }
+    val elevation by animateDpAsState(
+        targetValue = if (isAnimating) 20.dp else 10.dp,
+        animationSpec = infiniteRepeatable(
+            repeatMode = RepeatMode.Reverse,
+            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+        ),
+        label = "elevation"
+    )
+
+    LaunchedEffect(Unit) {
+        isAnimating = true
+    }
+
+    Surface(
+        modifier = Modifier
+            .size(100.dp)
+            .shadow(
+                elevation = elevation,
+                shape = CircleShape,
+                spotColor = Color(0xFF8A2BE2) // Purple shadow color
+            ),
+        shape = CircleShape,
+        color = Color(0xFF8A2BE2) // This will be the border color
+    ) {
+        Box(
+            modifier = Modifier.padding(4.dp), // This creates the border effect
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                model = "https://play-lh.googleusercontent.com/KGOmMhN6spxlHwZrtHvhQ1L0ZbokbKIHBAJTjmwF40yW9KVnCYt6AdpSQOFMVaLmj7o",
+                contentDescription = "Profile image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }
 

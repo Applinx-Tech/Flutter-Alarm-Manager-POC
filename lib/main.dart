@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/alarm_manager_screen.dart';
 
+import 'utils/alarm_method_channel.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  AlarmMethodChannel.initialize();
   runApp(const MyApp());
 }
 

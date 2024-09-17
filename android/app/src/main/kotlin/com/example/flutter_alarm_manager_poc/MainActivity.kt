@@ -26,12 +26,23 @@ class MainActivity : FlutterActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             CHANNEL
         ).setMethodCallHandler { call, result ->
-            if (call.method == "scheduleAlarm") {
-                Log.d(TAG, "Method Channel Invoked,Alarm Scheduling")
-                scheduleAlarm()
-                result.success(null)
-            } else {
-                result.notImplemented()
+            when (call.method) {
+                "scheduleAlarm" -> {
+                    Log.d(TAG, "Method Channel Invoked, Alarm Scheduling")
+                    scheduleAlarm()
+                    result.success(null)
+                }
+                "alarmAccepted" -> {
+                    Log.d(TAG, "Alarm Accepted")
+                    // Handle alarm accepted
+                    result.success(null)
+                }
+                "alarmSnoozed" -> {
+                    Log.d(TAG, "Alarm Snoozed")
+                    // Handle alarm snoozed
+                    result.success(null)
+                }
+                else -> result.notImplemented()
             }
         }
     }
