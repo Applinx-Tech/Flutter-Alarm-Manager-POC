@@ -29,7 +29,7 @@ class DatabaseService {
       );
       log('Stored alarm action: $actionType');
 
-      var actions = alarmBox.values;
+      var actions = getAllAlarmActions();
       log('Retrieved ${actions.length} alarm actions.');
     } catch (e) {
       log('Failed to store alarm action: $e');

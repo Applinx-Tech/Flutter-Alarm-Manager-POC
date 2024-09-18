@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/alarm_manager_screen.dart';
-import 'package:flutter_alarm_manager_poc/hive/models/alarm_action.dart';
 import 'package:flutter_alarm_manager_poc/hive/service/database_service.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'utils/alarm_method_channel.dart';
 
 void main() async {

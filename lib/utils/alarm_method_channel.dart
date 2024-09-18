@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_alarm_manager_poc/hive/models/alarm_action.dart';
 import 'package:flutter_alarm_manager_poc/hive/service/database_service.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class AlarmMethodChannel {
   static const name = "Flutter";
