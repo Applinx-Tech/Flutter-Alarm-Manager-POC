@@ -53,7 +53,7 @@ class AlarmNotificationServiceImpl(private val context: Context) : AlarmNotifica
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.launch_background)
+            .setSmallIcon(R.drawable.notification_bell)
             .setContentTitle("Alarm")
             .setContentText(alarmItem.message)
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -62,7 +62,6 @@ class AlarmNotificationServiceImpl(private val context: Context) : AlarmNotifica
             .setOngoing(true) // to make the notification persistent
             .setAutoCancel(false) // to prevent the notification from being dismissed
 
-        //  make the notification sound repeat until the user responds.
 
         val notification = notificationBuilder.build().apply {
             // to make the notification sound repeat until the user responds.

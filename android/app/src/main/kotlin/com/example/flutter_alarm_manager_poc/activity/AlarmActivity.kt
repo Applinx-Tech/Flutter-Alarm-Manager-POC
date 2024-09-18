@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import com.example.flutter_alarm_manager_poc.alarmNotificationService.AlarmNotificationService
+import com.example.flutter_alarm_manager_poc.alarmNotificationService.AlarmNotificationServiceImpl
 import com.example.flutter_alarm_manager_poc.screens.AlarmScreen
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
@@ -21,6 +23,12 @@ class AlarmActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         actionBar?.hide()
+
+        val alarmId = intent.getIntExtra("ALARM_ID", -1)
+
+
+        val notificationService: AlarmNotificationService = AlarmNotificationServiceImpl(this)
+
 
         // Check if a cached engine is available
         flutterEngine = FlutterEngineCache.getInstance().get(ENGINE_ID)
@@ -47,10 +55,12 @@ class AlarmActivity : ComponentActivity() {
                     AlarmScreen(
                         onAccept = {
                             channel.invokeMethod("alarmAccepted", null)
+                            notificationService.cancelNotification(alarmId)
                             finish()
                         },
                         onSnooze = {
                             channel.invokeMethod("alarmSnoozed", null)
+                            notificationService.cancelNotification(alarmId)
                             finish()
                         }
                     )
