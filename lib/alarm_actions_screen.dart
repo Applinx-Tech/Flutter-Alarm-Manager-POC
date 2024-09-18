@@ -12,14 +12,15 @@ class AlarmActionsScreen extends StatefulWidget {
 }
 
 class _AlarmActionsScreenState extends State<AlarmActionsScreen> {
-  late final Box<AlarmAction> _box;
+  late final DatabaseService _databaseService;
 
   @override
   void initState() {
     super.initState();
-    _box = Hive.box<AlarmAction>(DatabaseService.alarmBoxName);
-
-    log(_box.values.toString());
+    _databaseService = DatabaseService.instance;
+    
+    final actions = _databaseService.getAllAlarmActions();
+    log(actions.length.toString());
   }
 
   @override
@@ -29,7 +30,7 @@ class _AlarmActionsScreenState extends State<AlarmActionsScreen> {
         title: const Text('Alarm Actions'),
       ),
       body: ValueListenableBuilder(
-        valueListenable: _box.listenable(),
+        valueListenable: _databaseService.alarmBoxListenable,
         builder: (context, Box<AlarmAction> box, _) {
           final actions = box.values.toList();
           if (actions.isEmpty) {

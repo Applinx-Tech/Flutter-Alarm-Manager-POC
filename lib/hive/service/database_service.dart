@@ -1,18 +1,31 @@
 import 'dart:developer';
-
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import '../models/alarm_action.dart';
 
 class DatabaseService {
   static const String alarmBoxName = 'alarm_actions';
+  static DatabaseService? _instance;
+  late Box<AlarmAction> _alarmBox;
+
+  // Private constructor
+  DatabaseService._();
+
+  // Singleton instance getter
+  static DatabaseService get instance {
+    _instance ??= DatabaseService._();
+    return _instance!;
+  }
+
+  ValueListenable<Box<AlarmAction>> get alarmBoxListenable =>
+      _alarmBox.listenable();
 
   // Initialize Hive and open the alarm actions box
-  static Future<void> initializeHive() async {
+  Future<void> initializeHive() async {
     try {
       await Hive.initFlutter();
-      Hive.registerAdapter(AlarmActionAdapter()); //add TypeAdapater
-      await Hive.openBox<AlarmAction>(alarmBoxName);
+      Hive.registerAdapter(AlarmActionAdapter());
+      _alarmBox = await Hive.openBox<AlarmAction>(alarmBoxName);
       log('Hive initialized and box opened successfully.');
     } catch (e) {
       log('Failed to initialize Hive or open box: $e');
@@ -20,11 +33,9 @@ class DatabaseService {
   }
 
   // Add an alarm action to the Hive box
-  static Future<void> storeAlarmAction(String actionType) async {
+  Future<void> storeAlarmAction(String actionType) async {
     try {
-      var alarmBox = Hive.box<AlarmAction>(alarmBoxName);
-
-      await alarmBox.add(
+      await _alarmBox.add(
         AlarmAction(actionType, DateTime.now()),
       );
       log('Stored alarm action: $actionType');
@@ -37,10 +48,9 @@ class DatabaseService {
   }
 
   // Retrieve all alarm actions from the Hive box
-  static List<AlarmAction> getAllAlarmActions() {
+  List<AlarmAction> getAllAlarmActions() {
     try {
-      var alarmBox = Hive.box<AlarmAction>(alarmBoxName);
-      var actions = alarmBox.values;
+      var actions = _alarmBox.values;
       log('Retrieved ${actions.length} alarm actions.');
       return actions.toList();
     } catch (e) {
@@ -50,10 +60,9 @@ class DatabaseService {
   }
 
   // Clear all alarm actions (if needed)
-  static Future<void> clearAllAlarmActions() async {
+  Future<void> clearAllAlarmActions() async {
     try {
-      var alarmBox = Hive.box<AlarmAction>(alarmBoxName);
-      await alarmBox.clear();
+      await _alarmBox.clear();
       log('All alarm actions cleared.');
     } catch (e) {
       log('Failed to clear alarm actions: $e');

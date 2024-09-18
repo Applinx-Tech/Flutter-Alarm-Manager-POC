@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/alarm_actions_screen.dart';
 import 'package:flutter_alarm_manager_poc/utils/alarm_method_channel.dart';
 
+import 'hive/service/database_service.dart';
+
 class AlarmManagerScreen extends StatelessWidget {
   const AlarmManagerScreen({super.key});
 
@@ -15,8 +17,10 @@ class AlarmManagerScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.download),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const AlarmActionsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const AlarmActionsScreen()));
             },
           )
         ],

@@ -5,7 +5,7 @@ import 'utils/alarm_method_channel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseService.initializeHive();
+  await DatabaseService.instance.initializeHive();
   AlarmMethodChannel.initialize();
   runApp(const MyApp());
 }

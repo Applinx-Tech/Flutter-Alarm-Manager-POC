@@ -27,7 +27,7 @@ class AlarmMethodChannel {
         log(name: name, 'Alarm was accepted');
         //   await alarmBox.add(AlarmAction('accept', DateTime.now()));
 
-        await DatabaseService.storeAlarmAction("accept");
+        await DatabaseService.instance.storeAlarmAction("accept");
 
         // Handle alarm accepted
         // You can call a function or update state here
@@ -36,7 +36,7 @@ class AlarmMethodChannel {
         log(name: name, 'Alarm was snoozed');
         // await alarmBox.add(AlarmAction('snooze', DateTime.now()));
 
-        await DatabaseService.storeAlarmAction("snooze");
+        await DatabaseService.instance.storeAlarmAction("snooze");
 
         // Handle alarm snoozed
         // You can call a function or update state here
