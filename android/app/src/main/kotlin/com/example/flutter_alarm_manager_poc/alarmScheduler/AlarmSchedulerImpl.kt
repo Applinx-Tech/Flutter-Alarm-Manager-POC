@@ -39,6 +39,18 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
         )
     }
 
+    override fun isAlarmSet(alarmId: Int): Boolean {
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            alarmId.toInt(),
+            intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+        return pendingIntent != null
+
+    }
+
     override fun cancel(alarmItem: AlarmItem) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(

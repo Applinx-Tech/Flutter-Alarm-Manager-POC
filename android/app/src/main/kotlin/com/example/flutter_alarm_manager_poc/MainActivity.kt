@@ -77,6 +77,11 @@ class MainActivity : FlutterActivity() {
                 message = message,
                 time = time
             )
+
+            if (alarmScheduler.isAlarmSet(alarmId = alarmItem.id)){
+                alarmScheduler.cancel(alarmItem)
+                Log.d(TAG,"Alarm Edited")
+            }
             alarmScheduler.schedule(alarmItem)
         }
     }
