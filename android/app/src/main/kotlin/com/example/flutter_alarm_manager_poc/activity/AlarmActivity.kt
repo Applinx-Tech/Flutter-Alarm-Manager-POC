@@ -7,6 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import com.example.flutter_alarm_manager_poc.alarmNotificationService.AlarmNotificationService
 import com.example.flutter_alarm_manager_poc.alarmNotificationService.AlarmNotificationServiceImpl
+import com.example.flutter_alarm_manager_poc.alarmScheduler.AlarmScheduler
+import com.example.flutter_alarm_manager_poc.alarmScheduler.AlarmSchedulerImpl
+import com.example.flutter_alarm_manager_poc.model.AlarmItem
 import com.example.flutter_alarm_manager_poc.screens.AlarmScreen
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
@@ -19,6 +22,8 @@ class AlarmActivity : ComponentActivity() {
     private val CHANNEL = "com.example/alarm_manager"
     private var flutterEngine: FlutterEngine? = null
     private var isNewEngineCreated = false // create new engine when app is closed and use existing when app is resumed state
+    private lateinit var alarmNotificationService: AlarmNotificationService
+    private lateinit var alarmScheduler: AlarmScheduler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +32,8 @@ class AlarmActivity : ComponentActivity() {
         val alarmId = intent.getIntExtra("ALARM_ID", -1)
 
 
-        val notificationService: AlarmNotificationService = AlarmNotificationServiceImpl(this)
+        alarmNotificationService = AlarmNotificationServiceImpl(this)
+        alarmScheduler = AlarmSchedulerImpl(this)
 
 
         // Check if a cached engine is available
@@ -55,18 +61,28 @@ class AlarmActivity : ComponentActivity() {
                     AlarmScreen(
                         onAccept = {
                             channel.invokeMethod("alarmAccepted", null)
-                            notificationService.cancelNotification(alarmId)
+                            alarmNotificationService.cancelNotification(alarmId)
                             finish()
                         },
                         onSnooze = {
                             channel.invokeMethod("alarmSnoozed", null)
-                            notificationService.cancelNotification(alarmId)
+                            snoozeAlarm()
+                            alarmNotificationService.cancelNotification(alarmId)
                             finish()
                         }
                     )
                 }
             }
         }
+    }
+
+    private fun snoozeAlarm() {
+
+        val alarmItem = AlarmItem(
+            id = 1,
+            message = "Alarm has been ringing"
+        )
+        alarmScheduler.schedule(alarmItem)
     }
 
     override fun onDestroy() {
