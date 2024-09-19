@@ -31,10 +31,15 @@ class MainActivity : FlutterActivity() {
             CHANNEL
         ).setMethodCallHandler { call, result ->
             when (call.method) {
-                "scheduleAlarm" -> {
-                    Log.d(TAG, "Method Channel Invoked, Alarm Scheduling")
-                    scheduleAlarm()
-                    result.success(null)
+                "scheduleAlarms" -> {
+                    Log.d(TAG, "Method Channel Invoked, Alarms Scheduling")
+                    val alarms = call.argument<List<Map<String, Any>>>("alarms")
+                    if (alarms != null) {
+                        scheduleAlarms(alarms)
+                        result.success(null)
+                    } else {
+                        result.error("INVALID_ARGUMENT", "Alarms list is null", null)
+                    }
                 }
                 "alarmAccepted" -> {
                     Log.d(TAG, "Alarm Accepted")
@@ -55,8 +60,24 @@ class MainActivity : FlutterActivity() {
 
         val alarmItem = AlarmItem(
             id = 1,
-            message = "Alarm has been ringing"
+            message = "Alarm has been ringing",
+            time = 1700000
         )
         alarmScheduler.schedule(alarmItem)
+    }
+
+    private fun scheduleAlarms(alarms: List<Map<String, Any>>) {
+        for (alarm in alarms) {
+            val id = (alarm["id"] as? Number)?.toInt() ?: continue
+            val message = alarm["message"] as? String ?: continue
+            val time = (alarm["time"] as? Number)?.toLong() ?: continue
+
+            val alarmItem = AlarmItem(
+                id = id,
+                message = message,
+                time = time
+            )
+            alarmScheduler.schedule(alarmItem)
+        }
     }
 }

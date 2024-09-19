@@ -23,7 +23,8 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
         val message = intent?.getStringExtra("ALARM_MESSAGE") ?: "Alarm!"
+        val time = intent?.getLongExtra("ALARM_TIME",1700000) ?: 1700000
         val notificationService: AlarmNotificationService = AlarmNotificationServiceImpl(context)
-        notificationService.showNotification(AlarmItem(alarmId, message))
+        notificationService.showNotification(AlarmItem(alarmId, message,time))
     }
 }

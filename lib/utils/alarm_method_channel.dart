@@ -2,16 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_alarm_manager_poc/hive/service/database_service.dart';
+import 'package:flutter_alarm_manager_poc/model/alarm_model.dart';
 
 class AlarmMethodChannel {
   static const name = "Flutter";
   static const platform = MethodChannel('com.example/alarm_manager');
 
-  static Future<void> scheduleAlarm() async {
+  static Future<void> scheduleAlarms(List<AlarmModel> alarms) async {
     try {
-      await platform.invokeMethod('scheduleAlarm');
+      final List<Map<String, dynamic>> alarmMaps = alarms.map((alarm) => alarm.toJson()).toList();
+      await platform.invokeMethod('scheduleAlarms', {'alarms': alarmMaps});
     } on PlatformException catch (e) {
-      log("Failed to schedule alarm: '${e.message}'.");
+      log("Failed to schedule alarms: '${e.message}'.");
     }
   }
 

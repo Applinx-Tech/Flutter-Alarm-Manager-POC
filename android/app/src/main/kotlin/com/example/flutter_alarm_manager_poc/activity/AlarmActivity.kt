@@ -15,6 +15,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
+import java.util.Calendar
 
 
 class AlarmActivity : ComponentActivity() {
@@ -29,7 +30,9 @@ class AlarmActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         actionBar?.hide()
 
-        val alarmId = intent.getIntExtra("ALARM_ID", -1)
+        val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
+        val message = intent?.getStringExtra("ALARM_MESSAGE") ?: "Alarm!"
+        val time = intent?.getLongExtra("ALARM_TIME",1700000) ?: 1700000
 
 
         alarmNotificationService = AlarmNotificationServiceImpl(this)
@@ -59,6 +62,7 @@ class AlarmActivity : ComponentActivity() {
             MaterialTheme {
                 Surface(color = MaterialTheme.colorScheme.onSurface) {
                     AlarmScreen(
+                        message = message,
                         onAccept = {
                             channel.invokeMethod("alarmAccepted", null)
                             alarmNotificationService.cancelNotification(alarmId)
@@ -66,7 +70,7 @@ class AlarmActivity : ComponentActivity() {
                         },
                         onSnooze = {
                             channel.invokeMethod("alarmSnoozed", null)
-                            snoozeAlarm()
+                            snoozeAlarm(id = alarmId,message = message)
                             alarmNotificationService.cancelNotification(alarmId)
                             finish()
                         }
@@ -76,11 +80,18 @@ class AlarmActivity : ComponentActivity() {
         }
     }
 
-    private fun snoozeAlarm() {
+    private fun snoozeAlarm(id:Int,message:String) {
+
+                val triggerTime = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            add(Calendar.SECOND, 10)  // Set alarm 10 seconds from now
+        }.timeInMillis
 
         val alarmItem = AlarmItem(
-            id = 1,
-            message = "Alarm has been ringing"
+            id = id,
+            message = message,
+            time = triggerTime
+
         )
         alarmScheduler.schedule(alarmItem)
     }

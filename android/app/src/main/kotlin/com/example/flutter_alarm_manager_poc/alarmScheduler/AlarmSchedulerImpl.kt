@@ -16,6 +16,7 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("ALARM_ID", alarmItem.id)
             putExtra("ALARM_MESSAGE", alarmItem.message)
+            putExtra("ALARM_TIME",alarmItem.time)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -24,10 +25,12 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        val triggerTime = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            add(Calendar.SECOND, 10)  // Set alarm 10 seconds from now
-        }.timeInMillis
+//        val triggerTime = Calendar.getInstance().apply {
+//            timeInMillis = System.currentTimeMillis()
+//            add(Calendar.SECOND, 10)  // Set alarm 10 seconds from now
+//        }.timeInMillis
+
+        val triggerTime = alarmItem.time
 
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,

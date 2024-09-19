@@ -52,6 +52,7 @@ import org.w3c.dom.Text
 
 @Composable
 fun AlarmScreen(
+    message:String,
     onAccept: () -> Unit,
     onSnooze: () -> Unit
 ) {
@@ -78,6 +79,15 @@ fun AlarmScreen(
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
+
+            Text(
+                text = message,
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+
+
 
             AnimatedProfileImage()
 
@@ -178,5 +188,5 @@ fun AnimatedProfileImage() {
 @Preview
 @Composable
 private fun PrevAlarmScreen() {
-    AlarmScreen(onAccept = { /*TODO*/ }, onSnooze = { /*TODO*/ })
+    AlarmScreen(message = "Hello World", onAccept = { /*TODO*/ }, onSnooze = { /*TODO*/ })
 }
