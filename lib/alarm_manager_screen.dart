@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/alarm_actions_screen.dart';
 import 'package:flutter_alarm_manager_poc/utils/alarm_method_channel.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AlarmManagerScreen extends StatelessWidget {
   const AlarmManagerScreen({super.key});
+
+  Future<void> _requestNotificationPermission(BuildContext context) async {
+    final status = await Permission.notification.request();
+    if (status.isGranted) {
+      await AlarmMethodChannel.scheduleAlarm();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Notification permission is required to schedule alarms.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +41,7 @@ class AlarmManagerScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
             onPressed: () async {
-              await AlarmMethodChannel.scheduleAlarm();
+              await _requestNotificationPermission(context);
             },
             child: const Text("Schedule Alarm")),
       ),

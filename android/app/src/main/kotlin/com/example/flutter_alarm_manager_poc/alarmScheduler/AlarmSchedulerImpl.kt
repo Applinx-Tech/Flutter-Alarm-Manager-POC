@@ -26,7 +26,7 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
 
         val triggerTime = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            add(Calendar.SECOND, 10)  // Set alarm 10 seconds from now
+            add(Calendar.SECOND,10)  // Set alarm 10 seconds from now
         }.timeInMillis
 
         alarmManager.setExact(
