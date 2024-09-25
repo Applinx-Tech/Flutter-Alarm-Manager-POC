@@ -1,5 +1,7 @@
 # Flutter Alarm Manager POC
 
+![alt text](972shots_so.png)
+
 ## Overview
 
 This project demonstrates the implementation of a robust background alarm scheduling system in a Flutter application. It utilizes method channels to communicate with native Android code, Jetpack Compose for the alarm notification UI, and a custom notification service for managing high-priority alarm notifications.
@@ -96,6 +98,9 @@ The `AlarmReceiver` is a crucial component in the alarm management system. It ex
 ---
 
 ## Alarm Notification Flow
+
+![alt text](<Alarm Flow.png>)
+<p style="text-align:center;">Flow of Notification Handling</p>
 
 
 ### 1. **Alarm Set from Flutter**
