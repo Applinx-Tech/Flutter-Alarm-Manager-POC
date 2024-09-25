@@ -28,7 +28,7 @@ class AlarmManagerScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.download),
+            icon: const Icon(Icons.access_alarm),
             onPressed: () {
               Navigator.push(
                   context,
