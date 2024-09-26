@@ -25,14 +25,18 @@ This project demonstrates the implementation of a robust background alarm schedu
 - `lib/alarm_manager_screen.dart`: The main screen for scheduling alarms.
 - `lib/alarm_actions_screen.dart`: A screen to view and manage scheduled alarms.
 - `lib/utils/alarm_method_channel.dart`: Dart side of the method channel for communicating with native Android code.
+- `lib/hive/models/alarm_action.dart`: Data Model to store the alarm action selected with its timestamp.
+-  `lib/hive/service/database_service.dart`: Contains code related to Hive DB for Crud Operations
 
 ### Native Android (Kotlin) Side
 
 - `android/app/src/main/kotlin/.../MainActivity.kt`: Main activity for the Flutter app, handles method channel communication.
-- `android/app/src/main/kotlin/.../AlarmActivity.kt`: Activity for displaying and handling alarms using Jetpack Compose.
+- `android/app/src/main/kotlin/.../AlarmActivity.kt`: Activity for displaying and handling alarms.
+- `android/app/src/main/kotlin/.../AlarmScreen.kt`: Jetpack Compose Screen hosted in AlarmActivity
+- `android/app/src/main/kotlin/.../model/AlarmItem.kt`: Data model for alarm items.
 - `android/app/src/main/kotlin/.../alarmScheduler/AlarmScheduler.kt`: Interface for alarm scheduling.
 - `android/app/src/main/kotlin/.../alarmScheduler/AlarmSchedulerImpl.kt`: Implementation of the alarm scheduling system.
-- `android/app/src/main/kotlin/.../model/AlarmItem.kt`: Data model for alarm items.
+
 - `android/app/src/main/kotlin/.../AlarmNotificationService.kt`: Interface for the alarm notification service.
 - `android/app/src/main/kotlin/.../AlarmNotificationServiceImpl.kt`: Implementation of the alarm notification service.
 
@@ -65,18 +69,41 @@ The `AlarmScheduler` interface and its implementation, `AlarmSchedulerImpl`, pro
 
 ### Key Responsibilities:
 
-- **Scheduling Alarms**: The `AlarmScheduler` is responsible for scheduling alarms to trigger at a specific time. It ensures that the necessary system components, such as `AlarmManager`, are used correctly to wake the device and trigger the alarm on time.
+- **Scheduling and Canceling Alarms**: The `AlarmScheduler` is responsible for scheduling alarms to trigger at a specific time. It ensures that the necessary system components, such as `AlarmManager`, are used correctly to wake the device and trigger the alarm on time.
+
+```kotlin
+
+   val alarmScheduler = AlarmSchedulerImpl(this)
+   val alarmItem = AlarmItem(
+            id = 1,
+            message = "Alarm has been ringing"
+        )
+   // To schedule full screen notification alarms
+   alarmScheduler.schedule(alarmItem)
+
+```
 
 - **Handling Exact Timings**: The scheduler is designed to handle precise alarm timings using Android's `AlarmManager.setExact()` method, which is suitable for alarms requiring exact triggers.
 
 - **Canceling Alarms**: The `AlarmScheduler` also provides functionality to cancel scheduled alarms. It ensures that any pending intents related to the alarm are properly canceled, preventing unnecessary alarms from firing.
 
+```kotlin
+
+   val alarmScheduler = AlarmSchedulerImpl(this)
+   val alarmItem = AlarmItem(
+            id = 1,
+            message = "Alarm has been ringing"
+        )
+
+   // To cancel alarm
+   alarmScheduler.cancel(alarmItem)
+
+```
+
 - **Managing Alarm Intents**: The `AlarmScheduler` is responsible for creating and managing `PendingIntent` objects that represent the scheduled alarms. These intents are used by the `AlarmManager` to trigger the alarm at the specified time.
 
-- **Ensuring Alarm Persistence**: The scheduler ensures that alarms persist even if the app is closed or the device is restarted (when configured with `RECEIVE_BOOT_COMPLETED`).
 
 ## AlarmReceiver
-
 
 
 The `AlarmReceiver` is a crucial component in the alarm management system. It extends `BroadcastReceiver`, enabling the app to respond to system-wide broadcast events, specifically alarms that are triggered by the `AlarmManager`.
@@ -94,13 +121,27 @@ The `AlarmReceiver` is a crucial component in the alarm management system. It ex
 **Displaying Notifications:**
    - After receiving the alarm, the receiver creates an instance of `AlarmNotificationService` and invokes its `showNotification` method, which displays a notification to the user about the alarm.
 
+```kotlin
+class AlarmReceiver : BroadcastReceiver() {
+
+
+    override fun onReceive(context: Context, intent: Intent?) {
+        val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
+        val message = intent?.getStringExtra("ALARM_MESSAGE") ?: "Alarm!"
+        val notificationService: AlarmNotificationService = AlarmNotificationServiceImpl(context)
+        notificationService.showNotification(AlarmItem(alarmId, message))
+    }
+}
+
+```
+
 
 ---
 
 ## Alarm Notification Flow
 
 ![alt text](<Alarm Flow.png>)
-<p style="text-align:center;">Flow of Notification Handling</p>
+<p style="text-align:center; font-weight:bold;">Flow of Notification Handling</p>
 
 
 ### 1. **Alarm Set from Flutter**
@@ -141,5 +182,30 @@ The `AlarmReceiver` is a crucial component in the alarm management system. It ex
 
 
 ---
+
+## Permissions
+
+### The app requires the following permissions to function correctly:
+
+```xml
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+```
+
+### Also add the following in the Notification Activity in your Manifest
+
+```xml
+   <activity
+      android:name=".activity.AlarmActivity"
+      android:showWhenLocked="true"
+      android:turnScreenOn="true"
+      android:exported="false" />
+
+```
+# Contributing
+### Contributions are welcome! Please feel free to submit a Pull Request.
 
 
