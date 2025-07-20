@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_manager_poc/alarm_manager_screen.dart';
 import 'package:flutter_alarm_manager_poc/hive/service/database_service.dart';
-import 'utils/alarm_method_channel.dart';
+import 'package:flutter_alarm_manager_poc/utils/alarm_method_channel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

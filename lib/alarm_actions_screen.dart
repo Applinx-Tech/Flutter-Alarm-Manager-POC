@@ -18,7 +18,7 @@ class _AlarmActionsScreenState extends State<AlarmActionsScreen> {
   void initState() {
     super.initState();
     _databaseService = DatabaseService.instance;
-    
+
     final actions = _databaseService.getAllAlarmActions();
     log(actions.length.toString());
   }

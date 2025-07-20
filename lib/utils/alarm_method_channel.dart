@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_alarm_manager_poc/hive/service/database_service.dart';
 
 class AlarmMethodChannel {
-  static const name = "Flutter";
+  static const name = 'Flutter';
   static const platform = MethodChannel('com.example/alarm_manager');
 
   static Future<void> scheduleAlarm() async {
@@ -27,20 +27,18 @@ class AlarmMethodChannel {
         log(name: name, 'Alarm was accepted');
         //   await alarmBox.add(AlarmAction('accept', DateTime.now()));
 
-        await DatabaseService.instance.storeAlarmAction("accept");
+        await DatabaseService.instance.storeAlarmAction('accept');
 
-        // Handle alarm accepted
-        // You can call a function or update state here
-        break;
+      // Handle alarm accepted
+      // You can call a function or update state here
       case 'alarmSnoozed':
         log(name: name, 'Alarm was snoozed');
         // await alarmBox.add(AlarmAction('snooze', DateTime.now()));
 
-        await DatabaseService.instance.storeAlarmAction("snooze");
+        await DatabaseService.instance.storeAlarmAction('snooze');
 
-        // Handle alarm snoozed
-        // You can call a function or update state here
-        break;
+      // Handle alarm snoozed
+      // You can call a function or update state here
       default:
         log('Unrecognized method ${call.method}');
     }
